@@ -1,0 +1,18 @@
+<h1>Form</h1>
+
+<form [formGroup]="form">
+    <table>
+        <tr>
+            <td>Name</td>
+            <td><input type="text" formControlName="name"></td><span> {{ name }} </span>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><input type="text" formControlName="email"></td><span> {{ email }} </span>
+        </tr>
+        <tr>
+            <td>Printing entire object in json string format</td>
+            <span> {{ object | json }} </span>
+        </tr>
+    </table>
+</form>
