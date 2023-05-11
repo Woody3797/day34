@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { tap } from 'rxjs';
 
@@ -7,8 +7,8 @@ import { tap } from 'rxjs';
   templateUrl: './display.component.html',
   styleUrls: ['./display.component.css']
 })
-export class DisplayComponent implements OnInit {
-
+export class DisplayComponent implements OnInit, OnDestroy {
+    
     fb = inject(FormBuilder)
     form!: FormGroup
     name!: string
@@ -20,6 +20,7 @@ export class DisplayComponent implements OnInit {
             name: this.fb.control(''),
             email: this.fb.control('',)
         })
+        
         this.form.valueChanges.pipe(
             tap(v => {
                 console.info(v)
@@ -34,5 +35,8 @@ export class DisplayComponent implements OnInit {
         })
     }
 
+    ngOnDestroy(): void {
+        throw new Error('Method not implemented.');
+    }
     
 }

@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, Subject, Subscription, filter, map, startWith, tap } from 'rxjs';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Observable, Subject, Subscription, debounceTime, filter, map, skip, startWith, tap } from 'rxjs';
 import { InputComponent } from './input/input.component';
+import { DogService } from './dog.service';
+import { ApiResponse } from './model';
 
 @Component({
   selector: 'app-root',
@@ -15,8 +17,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     countSub$!: Subscription // $ is a convention in naming for Subscription, Observable, Promise
     countObs$!: Observable<number>
     countObs2$!: Observable<number>
-
-    keyPressed$!: Observable<string>
 
     ngOnInit(): void {
         this.countObs2$ = this.countEvent
@@ -48,13 +48,32 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         this.countEvent.next(this.count)
     }
 
+
+
     @ViewChild(InputComponent)
     inputComp!: InputComponent
 
-
+    keyPressed$!: Observable<string | undefined>
 
     ngAfterViewInit(): void {
-        this.keyPressed$ = this.inputComp.keyPressed
+        this.keyPressed$ = this.inputComp.keyPressed.pipe(
+            debounceTime(100),
+            map(v => v.split('').filter(c => c != 'e').join('').toUpperCase())
+        )
+    }
 
+
+
+    dogSvc = inject(DogService)
+
+    dogResponse$!: Observable<ApiResponse>
+    dogProm$!: Promise<string>
+
+    getDogsAsObservable() {
+        this.dogResponse$ = this.dogSvc.getDogAsObservable()
+    }
+
+    getDogsAsPromise() {
+        this.dogProm$ = this.dogSvc.getDogAsPromiseImage()
     }
 }

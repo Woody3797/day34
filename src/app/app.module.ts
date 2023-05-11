@@ -5,6 +5,8 @@ import { AppComponent } from './app.component';
 import { InputComponent } from './input/input.component';
 import { DisplayComponent } from './display/display.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { DogService } from './dog.service';
 
 @NgModule({
   declarations: [
@@ -15,8 +17,9 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     BrowserModule,
     ReactiveFormsModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [ DogService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

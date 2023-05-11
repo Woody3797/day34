@@ -12,8 +12,29 @@
 <hr>
 
 <app-input></app-input>
-<h2> {{ keyPressed$ | async }} </h2>
-
+<h2> Output: {{ keyPressed$ | async }} </h2>
 <hr>
+
 <app-display></app-display>
+<hr>
+
+<div *ngIf="dogResponse$ | async as resp else noImage">
+    <h3>Status: {{ resp.status }} </h3>
+    <img [src]="resp.message" alt="" width="500">
+</div>
+<div>
+    <button type="submit" (click)="getDogsAsObservable()">GET (Observable)</button>
+</div>
+
+<div *ngIf="dogProm$ | async as img else noImage">
+    <h3>Link: {{ img }} </h3>
+    <img [src]="img" alt="" width="500">
+</div>
+<div>
+    <button type="submit" (click)="getDogsAsPromise()">GET (Promise)</button>
+</div>
+
+<ng-template #noImage>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png" alt="" width="500">
+</ng-template>
 

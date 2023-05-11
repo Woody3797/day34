@@ -12,7 +12,7 @@ export class InputComponent {
     keyPressed = new Subject<string>()
 
     keypressed(event: any) {
-        console.info(event.target.value)
-        
+        console.info(event)
+        this.keyPressed.next(event.target.value)
     }
 }
