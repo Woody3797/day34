@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { tap } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 
 @Component({
   selector: 'app-display',
@@ -14,24 +14,19 @@ export class DisplayComponent implements OnInit, OnDestroy {
     name!: string
     email!: string
     object!: string
+    form$!: Observable<string>
 
     ngOnInit(): void {
         this.form = this.fb.group({
             name: this.fb.control(''),
-            email: this.fb.control('',)
+            email: this.fb.control(''),
         })
+        this.form$ = this.form.valueChanges
         
-        this.form.valueChanges.pipe(
-            tap(v => {
-                console.info(v)
-                this.name = v['name']
-                this.email = v['email']
-                this.object = v
-            })
-        ).subscribe({
-            next: v => { },
-            error: err => { },
-            complete: () => { },
+        this.form.valueChanges.subscribe({
+            next: v => { this.object = v},
+            error: err => { console.info(err) },
+            complete: () => { null },
         })
     }
 

@@ -11,6 +11,10 @@
             <td><input type="text" formControlName="email"></td><span> {{ email }} </span>
         </tr>
         <tr>
+            <td>Printing form in json string format</td>
+            <span> {{ form$ | async | json }} </span>
+        </tr>
+        <tr>
             <td>Printing entire object in json string format</td>
             <span> {{ object | json }} </span>
         </tr>

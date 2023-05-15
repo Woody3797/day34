@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { Observable, Subject, Subscription, debounceTime, filter, map, skip, startWith, tap } from 'rxjs';
+import { Observable, Subject, Subscription, debounceTime, filter, map, mergeMap, skip, startWith, tap } from 'rxjs';
 import { InputComponent } from './input/input.component';
 import { DogService } from './dog.service';
 import { ApiResponse } from './model';
@@ -19,15 +19,16 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     countObs2$!: Observable<number>
 
     ngOnInit(): void {
-        this.countObs2$ = this.countEvent
         this.countObs$ = this.countEvent.pipe(
-            startWith(this.count),
+            startWith(this.count + 2),
             tap(v => {
-                console.info(v)
+                console.info(v + ' countObs')
             }),
             filter(v => !(v%2)),
             map(v => v * 10)
         )
+
+        this.countObs2$ = this.countEvent.pipe()
         this.countSub$ = this.countEvent.subscribe(
             (v) => {
                 this.log = v
@@ -43,7 +44,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         this.countSub$.unsubscribe()
     }
 
-    pressed() {
+    generate() {
         this.count = Math.floor(Math.random() * 100)
         this.countEvent.next(this.count)
     }
@@ -53,12 +54,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(InputComponent)
     inputComp!: InputComponent
 
-    keyPressed$!: Observable<string | undefined>
+    output$!: Observable<string>
 
     ngAfterViewInit(): void {
-        this.keyPressed$ = this.inputComp.keyPressed.pipe(
-            debounceTime(100),
-            map(v => v.split('').filter(c => c != 'e').join('').toUpperCase())
+        this.output$ = this.inputComp.keyPressed.pipe(
+            map(v => v.split('').filter(c => c != 'a').join('').toUpperCase())
         )
     }
 
@@ -66,14 +66,14 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
     dogSvc = inject(DogService)
 
-    dogResponse$!: Observable<ApiResponse>
-    dogProm$!: Promise<string>
+    dogObs$!: Observable<ApiResponse>
+    dogProm$!: Promise<ApiResponse>
 
     getDogsAsObservable() {
-        this.dogResponse$ = this.dogSvc.getDogAsObservable()
+        this.dogObs$ = this.dogSvc.getDogAsObservable()
     }
 
     getDogsAsPromise() {
-        this.dogProm$ = this.dogSvc.getDogAsPromiseImage()
+        this.dogProm$ = this.dogSvc.getDogAsPromise()
     }
 }

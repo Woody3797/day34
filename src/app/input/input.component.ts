@@ -1,4 +1,4 @@
-import { Component, Output } from '@angular/core';
+import { Component, HostListener, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -9,10 +9,11 @@ import { Subject } from 'rxjs';
 export class InputComponent {
 
     @Output()
-    keyPressed = new Subject<string>()
+    keyPressed = new Subject<string>
 
     keypressed(event: any) {
-        console.info(event)
+        console.info(event.target.value)
         this.keyPressed.next(event.target.value)
     }
+    
 }
